@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-secondary antialiased font-sans overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-glass-gradient backdrop-blur-md border border-border rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  }
+  
+  .glass-window {
+    @apply bg-surface/40 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl overflow-hidden;
+  }
+
+  .neon-text {
+    @apply text-primary drop-shadow-[0_0_8px_rgba(0,240,255,0.8)];
+  }
+}
+
+/* Lenis recommended css */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
