@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
+import { siteConfig } from '../../data/site';
+
 const terminalLines = [
   "SYSTEM INITIALIZED",
-  "USER: DEVELOPER (Erebus / Noctis)",
-  "ROLE: Systems Developer | Full Stack Engineer | Embedded Builder",
+  `USER: ${siteConfig.name.toUpperCase()}`,
+  `ROLE: ${siteConfig.role.toUpperCase()}`,
+  `LOC: ${siteConfig.location.toUpperCase()}`,
   "CORE: ONLINE",
-  "FOCUS: Software engineering | Systems programming | AI experimentation | Hardware prototyping"
 ];
 
 export function TerminalHero() {
@@ -28,7 +30,7 @@ export function TerminalHero() {
   }, []);
 
   return (
-    <div className="min-h-[60vh] flex flex-col justify-center">
+    <div className="w-full flex flex-col justify-center">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

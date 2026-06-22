@@ -19,9 +19,9 @@ export function Navbar() {
       className="fixed top-0 left-0 w-full z-50 px-6 py-4 pointer-events-auto"
     >
       <div className="max-w-7xl mx-auto glass-panel px-6 py-3 flex items-center justify-between">
-        <div className="text-white font-bold tracking-widest text-lg">
+        <NavLink to="/" className="text-white font-bold tracking-widest text-lg">
           EREBUS<span className="text-primary">_CORE</span>
-        </div>
+        </NavLink>
         
         <div className="hidden md:flex gap-8 font-mono text-sm">
           {links.map((link) => (

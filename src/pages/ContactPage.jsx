@@ -1,34 +1,72 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { GlassWindow } from '../components/UI/GlassWindow';
+import { socialLinks } from '../data/social';
+import { siteConfig } from '../data/site';
 
 export function ContactPage() {
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="container mx-auto px-6 py-12"
-    >
-      <h1 className="text-3xl font-bold font-mono neon-text mb-8">/contact</h1>
-      <GlassWindow title="send_transmission.sh" className="max-w-2xl">
-        <form className="space-y-4 font-mono text-sm">
+    <div className="min-h-screen pt-24 pb-12 px-6 max-w-4xl mx-auto flex flex-col justify-center relative z-10">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-16"
+      >
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <span className="text-primary">{'>'}</span> Initiate.Contact
+        </h1>
+        <p className="text-muted text-lg">
+          My inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+        </p>
+      </motion.div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="glass-window p-8 border-l-4 border-l-primary flex flex-col justify-between"
+        >
           <div>
-            <label className="block text-muted mb-1">{"<"} ID / NAME {">"}</label>
-            <input type="text" className="w-full bg-black/40 border border-white/10 rounded p-2 text-white outline-none focus:border-primary" />
+            <h2 className="text-2xl font-bold text-white mb-2">Direct Channel</h2>
+            <p className="text-muted mb-8">Secure connection established. Awaiting input stream.</p>
           </div>
-          <div>
-            <label className="block text-muted mb-1">{"<"} FREQUENCY / EMAIL {">"}</label>
-            <input type="email" className="w-full bg-black/40 border border-white/10 rounded p-2 text-white outline-none focus:border-primary" />
+          
+          <div className="space-y-6">
+            <div>
+              <div className="text-secondary/70 font-mono text-xs uppercase tracking-widest mb-1">Email ID</div>
+              <a href={`mailto:${siteConfig.email}`} className="text-lg text-white hover:text-primary transition-colors">
+                {siteConfig.email}
+              </a>
+            </div>
+            <div>
+              <div className="text-secondary/70 font-mono text-xs uppercase tracking-widest mb-1">Location</div>
+              <div className="text-lg text-white">
+                {siteConfig.location}
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-muted mb-1">{"<"} PAYLOAD / MESSAGE {">"}</label>
-            <textarea rows="4" className="w-full bg-black/40 border border-white/10 rounded p-2 text-white outline-none focus:border-primary"></textarea>
-          </div>
-          <button type="button" className="bg-primary/20 text-primary border border-primary px-4 py-2 rounded hover:bg-primary/30 transition-colors">
-            [ EXECUTE TRANSMISSION ]
-          </button>
-        </form>
-      </GlassWindow>
-    </motion.div>
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="grid grid-cols-2 gap-4"
+        >
+          {socialLinks.map((social, idx) => (
+            <a 
+              key={social.id}
+              href={social.url}
+              target="_blank"
+              rel="noreferrer"
+              className="glass-panel p-6 flex flex-col items-center justify-center gap-4 hover:border-primary/50 group transition-all duration-300"
+            >
+              <social.icon className="w-8 h-8 text-secondary/80 group-hover:text-primary transition-colors" />
+              <span className="font-mono text-sm text-white group-hover:text-primary transition-colors">{social.label}</span>
+            </a>
+          ))}
+        </motion.div>
+      </div>
+    </div>
   );
 }
