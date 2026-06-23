@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Navbar } from './Navbar';
-import { SystemMonitor } from '../HUD/SystemMonitor';
+import { Footer } from './Footer';
 import { Helmet } from 'react-helmet-async';
 import { siteConfig } from '../../data/site';
 import { SceneWrapper } from '../3DScene/Scene';
@@ -33,15 +33,13 @@ export function MainLayout() {
         {/* Top Navigation */}
         <Navbar />
 
-        {/* System Monitor overlay globally */}
-        <div className="fixed inset-0 z-40 pointer-events-none hidden lg:block mt-24">
-          <SystemMonitor />
-        </div>
 
         {/* Page Content */}
         <main id="main-content" className="flex-1 relative z-20 pt-24 pb-12 focus:outline-none" tabIndex="-1">
           <Outlet />
         </main>
+        
+        <Footer />
       </div>
     </div>
   );

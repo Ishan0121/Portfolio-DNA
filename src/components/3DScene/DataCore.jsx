@@ -5,22 +5,22 @@ import * as THREE from 'three';
 // ─── MATERIAL LIBRARY ───────────────────────────────────────────────────────
 const MAT = {
   // Structural metal
-  darkFrame:   { color: '#1a1a1a', metalness: 0.5, roughness: 0.6 },
-  charcoal:    { color: '#2a2d32', metalness: 0.5, roughness: 0.5 },
-  gunmetal:    { color: '#32373e', metalness: 0.5, roughness: 0.5 },
-  steel:       { color: '#444a57', metalness: 0.4, roughness: 0.4 },
+  darkFrame:   { color: '#0a0a0a', metalness: 0.98, roughness: 0.45 },
+  charcoal:    { color: '#111418', metalness: 0.95, roughness: 0.40 },
+  gunmetal:    { color: '#1c2128', metalness: 0.90, roughness: 0.38 },
+  steel:       { color: '#2e3440', metalness: 0.88, roughness: 0.35 },
   // Bright metals
-  silver:      { color: '#b0b8c4', metalness: 0.6, roughness: 0.3 },
-  chrome:      { color: '#d8dfe8', metalness: 0.7, roughness: 0.2 },
-  titanium:    { color: '#7a8899', metalness: 0.5, roughness: 0.4 },
+  silver:      { color: '#b0b8c4', metalness: 1.00, roughness: 0.10 },
+  chrome:      { color: '#d8dfe8', metalness: 1.00, roughness: 0.04 },
+  titanium:    { color: '#7a8899', metalness: 0.95, roughness: 0.20 },
   // Neon emissives
   neonCyan:    { color: '#00e8ff', emissive: '#00e8ff', emissiveIntensity: 12, metalness: 0, roughness: 1 },
   neonCyanMid: { color: '#00c8e8', emissive: '#00c8e8', emissiveIntensity:  6, metalness: 0, roughness: 1 },
   neonCyanSoft:{ color: '#00a0c0', emissive: '#00a0c0', emissiveIntensity:  3, metalness: 0, roughness: 1 },
   neonBlue:    { color: '#0050ff', emissive: '#0050ff', emissiveIntensity:  5, metalness: 0, roughness: 1 },
   // Cables
-  rubber:      { color: '#151518', metalness: 0.1, roughness: 0.90 },
-  rubberDark:  { color: '#101015', metalness: 0.1, roughness: 0.95 },
+  rubber:      { color: '#050508', metalness: 0.05, roughness: 0.95 },
+  rubberDark:  { color: '#08080d', metalness: 0.05, roughness: 0.98 },
 };
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────

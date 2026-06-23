@@ -9,17 +9,17 @@ function HydraulicMuscle({ position, rotation, length = 6 }) {
       {/* Outer cylinder attached to the eye */}
       <mesh position={[0, length/4, 0]}>
         <cylinderGeometry args={[0.15, 0.15, length/2, 16]} />
-        <meshStandardMaterial color="#333" metalness={0.4} roughness={0.5} />
+        <meshStandardMaterial color="#222" metalness={0.9} roughness={0.2} />
       </mesh>
       {/* Inner piston rod extending backward */}
       <mesh position={[0, length * 0.75, 0]}>
         <cylinderGeometry args={[0.08, 0.08, length/2, 16]} />
-        <meshStandardMaterial color="#888" metalness={0.6} roughness={0.4} />
+        <meshStandardMaterial color="#888" metalness={1} roughness={0.1} />
       </mesh>
       {/* Anchor ring where it attaches to the Sclera */}
       <mesh position={[0, 0, 0]} rotation={[Math.PI/2, 0, 0]}>
         <torusGeometry args={[0.22, 0.06, 16, 32]} />
-        <meshStandardMaterial color="#222" metalness={0.5} roughness={0.5} />
+        <meshStandardMaterial color="#111" metalness={1} roughness={0.3} />
       </mesh>
     </group>
   );
@@ -96,7 +96,7 @@ export function CyberEye() {
           {/* Base Iris Disc */}
           <mesh position={[0, -0.05, 0]}>
             <cylinderGeometry args={[1.35, 1.35, 0.05, 64]} />
-            <meshStandardMaterial color="#333" metalness={0.4} roughness={0.5} />
+            <meshStandardMaterial color="#1a1a1a" metalness={0.9} roughness={0.4} />
           </mesh>
 
           {/* Radial Muscles (Interlocking metal plates) */}
@@ -104,7 +104,7 @@ export function CyberEye() {
             {Array.from({length: 48}).map((_, i) => (
               <mesh key={`radial-${i}`} position={[Math.cos(i * Math.PI/24) * 0.8, 0, Math.sin(i * Math.PI/24) * 0.8]} rotation={[0, -i * Math.PI/24, 0]}>
                 <boxGeometry args={[0.06, 0.04, 0.9]} />
-                <meshStandardMaterial color="#444" metalness={0.5} roughness={0.5} />
+                <meshStandardMaterial color="#2a2a2a" metalness={1} roughness={0.3} />
               </mesh>
             ))}
 
@@ -122,7 +122,7 @@ export function CyberEye() {
           {/* Outer Iris Boundary Ring */}
           <mesh position={[0, 0.02, 0]}>
             <torusGeometry args={[1.3, 0.05, 32, 64]} />
-            <meshStandardMaterial color="#222" metalness={0.5} roughness={0.5} />
+            <meshStandardMaterial color="#111" metalness={1} roughness={0.2} />
           </mesh>
 
           {/* === MECHANICAL SHUTTER PUPIL === */}
@@ -130,7 +130,7 @@ export function CyberEye() {
             {/* Inner pupil rim */}
             <mesh>
                <torusGeometry args={[0.45, 0.02, 16, 32]} />
-               <meshStandardMaterial color="#1a1a1a" metalness={0.4} roughness={0.6} />
+               <meshStandardMaterial color="#050505" metalness={1} roughness={0.1} />
             </mesh>
             
             {/* The Shutter Blades */}
@@ -140,7 +140,7 @@ export function CyberEye() {
                 return (
                   <mesh key={`blade-${i}`} position={[Math.cos(angle) * 0.25, 0, Math.sin(angle) * 0.25]} rotation={[0, -angle + Math.PI/4, 0]}>
                     <boxGeometry args={[0.4, 0.02, 0.15]} />
-                    <meshStandardMaterial color="#222" metalness={0.4} roughness={0.6} />
+                    <meshStandardMaterial color="#0a0a0a" metalness={1} roughness={0.2} />
                   </mesh>
                 )
               })}
@@ -150,7 +150,7 @@ export function CyberEye() {
           {/* Deep Crystalline Lens behind Pupil */}
           <mesh position={[0, -0.2, 0]}>
             <sphereGeometry args={[0.4, 32, 32, 0, Math.PI*2, 0, Math.PI/2]} />
-            <meshPhysicalMaterial color="#111" metalness={0.4} roughness={0.3} clearcoat={1} />
+            <meshPhysicalMaterial color="#000" metalness={0.9} roughness={0} clearcoat={1} envMapIntensity={2} />
           </mesh>
 
           {/* Internal Glow illuminating the pupil */}
@@ -183,7 +183,7 @@ export function CyberEye() {
           {/* Main outer optic nerve sheath */}
           <mesh position={[0, 2.5, 0]}>
             <cylinderGeometry args={[0.6, 0.5, 5, 32]} />
-            <meshStandardMaterial color="#2a2a2a" metalness={0.3} roughness={0.7} />
+            <meshStandardMaterial color="#1a1a1a" metalness={0.9} roughness={0.5} />
           </mesh>
           {/* Internal glowing neural fibers (Data cables) */}
           {Array.from({length: 12}).map((_, i) => (
@@ -196,7 +196,7 @@ export function CyberEye() {
           {[0.5, 1.5, 2.5, 3.5, 4.5].map((y) => (
             <mesh key={`nerve-ring-${y}`} position={[0, y, 0]} rotation={[Math.PI/2, 0, 0]}>
               <torusGeometry args={[0.62, 0.08, 16, 32]} />
-              <meshStandardMaterial color="#444" metalness={0.5} roughness={0.5} />
+              <meshStandardMaterial color="#222" metalness={1} roughness={0.3} />
             </mesh>
           ))}
         </group>

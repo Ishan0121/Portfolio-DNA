@@ -52,7 +52,7 @@
 @layer components {
   .u-glass {
     background: linear-gradient(to bottom right, var(--color-glass-start), var(--color-glass-end));
-    @apply backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+    @apply backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)];
   }
 
   .glass-panel {
@@ -60,7 +60,7 @@
   }
   
   .glass-window {
-    @apply bg-surface/40 backdrop-blur-lg border border-border/10 rounded-lg shadow-xl overflow-hidden;
+    @apply bg-surface/40 backdrop-blur-2xl border border-border/10 rounded-lg shadow-xl overflow-hidden;
   }
 
   .neon-text {

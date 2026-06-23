@@ -10,8 +10,8 @@ export const DNA_SETTINGS = {
   pistonColor: "#333333",    // Inner mechanics
   glowColorAT: "#00f0ff",    // A-T base pair glow (Cyan)
   glowColorGC: "#ff0055",    // G-C base pair glow (Pink/Red)
-  metalness: 0.4,            // Lowered metalness so colors appear without environment map
-  roughness: 0.6             // Increased roughness for a more matte finish
+  metalness: 0.9,            // Restored high metalness for metallic vibe
+  roughness: 0.15            // Restored low roughness for sharp reflections
 };
 
 // Procedural Cybernetic DNA - Double Helix

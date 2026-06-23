@@ -50,6 +50,10 @@ export function SceneWrapper({ route }) {
       <directionalLight position={[0, -10, 5]} intensity={1} color="#222222" />
       <pointLight position={[-5, 0, 5]} color="#00f0ff" intensity={2} />
       
+      {/* Environment map ensures highly metallic materials have something to reflect, making their base colors visible */}
+      <Environment preset="city" />
+      
+      
       <Suspense fallback={<CanvasLoader />}>
         {(!route || route === '/') && <DNAEngine />}
         {route === '/about' && <NeuralNetwork />}

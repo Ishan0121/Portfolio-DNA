@@ -20,15 +20,15 @@ export function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-4"
+      className="fixed top-0 left-0 w-full z-50 px-4 md:px-6 py-4 flex flex-col gap-2"
     >
-      <div className="max-w-7xl mx-auto glass-panel px-6 py-3 flex items-center justify-between">
-        <NavLink to="/" className="text-white font-bold tracking-widest text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded">
+      <div className="max-w-[1400px] w-full mx-auto glass-panel px-4 md:px-6 py-3 flex items-center justify-between">
+        <NavLink to="/" className="text-white font-bold tracking-widest text-sm md:text-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary rounded whitespace-nowrap">
           {siteConfig.name.split(' ')[0].toUpperCase()}<span className="text-primary">_CORE</span>
         </NavLink>
         
         {/* Desktop Nav */}
-        <nav className="hidden md:flex gap-8 font-mono text-sm" aria-label="Main Navigation">
+        <nav className="hidden md:flex gap-6 lg:gap-8 font-mono text-xs md:text-sm" aria-label="Main Navigation">
           {links.map((link) => (
             <NavLink 
               key={link.path} 
