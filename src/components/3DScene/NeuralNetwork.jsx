@@ -34,20 +34,20 @@ function BeadedChain({ curve, pointCount }) {
       {/* The central wire */}
       <mesh>
         <tubeGeometry args={[curve, 64, 0.015, 8, false]} />
-        <meshStandardMaterial color="#333" metalness={0.9} roughness={0.1} />
+        <meshStandardMaterial color="#444" metalness={0.4} roughness={0.5} />
       </mesh>
 
       {/* The Beads */}
       <instancedMesh ref={meshRef} args={[null, null, pointCount]}>
         <sphereGeometry args={[0.06, 16, 16]} />
-        <meshStandardMaterial color="#0a0a0a" metalness={1} roughness={0.1} />
+        <meshStandardMaterial color="#222" metalness={0.5} roughness={0.5} />
       </instancedMesh>
 
       {/* Base Connector (Shock absorber) */}
       <group position={basePos} rotation={baseRot}>
         <mesh position={[0, 0.4, 0]}>
           <cylinderGeometry args={[0.15, 0.15, 0.8, 16]} />
-          <meshStandardMaterial color="#1a1a1a" metalness={1} roughness={0.2} />
+          <meshStandardMaterial color="#333" metalness={0.5} roughness={0.5} />
         </mesh>
         {/* Spring rings */}
         {[0.1, 0.3, 0.5, 0.7].map((y) => (
@@ -82,7 +82,7 @@ const DodecahedronJoints = ({ radius }) => {
       {vertices.map((v, i) => (
         <mesh key={i} position={v}>
           <sphereGeometry args={[0.15, 16, 16]} />
-          <meshStandardMaterial color="#111" metalness={1} roughness={0.1} />
+          <meshStandardMaterial color="#333" metalness={0.5} roughness={0.5} />
         </mesh>
       ))}
     </group>
@@ -102,7 +102,7 @@ function BackgroundNode({ position, scale, opacity }) {
     <group position={position} scale={[scale, scale, scale]} ref={ref}>
       <mesh>
         <dodecahedronGeometry args={[1.5, 0]} />
-        <meshStandardMaterial color="#111" metalness={1} roughness={0.2} transparent opacity={opacity} />
+        <meshStandardMaterial color="#333" metalness={0.4} roughness={0.6} transparent opacity={opacity} />
         <Edges scale={1.02} color="#00f0ff" transparent opacity={opacity * 0.5} />
       </mesh>
     </group>
@@ -169,7 +169,7 @@ export function NeuralNetwork() {
         {/* Soma Core (Dodecahedron) */}
         <mesh>
           <dodecahedronGeometry args={[coreRadius, 0]} />
-          <meshStandardMaterial color="#0a0a0a" metalness={1} roughness={0.1} transparent opacity={0.8} />
+          <meshStandardMaterial color="#222" metalness={0.4} roughness={0.6} transparent opacity={0.8} />
           {/* Subtle outer edge glow */}
           <Edges scale={1.01} threshold={15} color="#444" />
           <Edges scale={1.01} threshold={15} color="#00f0ff" opacity={0.3} transparent />

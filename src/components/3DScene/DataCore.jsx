@@ -5,22 +5,22 @@ import * as THREE from 'three';
 // ─── MATERIAL LIBRARY ───────────────────────────────────────────────────────
 const MAT = {
   // Structural metal
-  darkFrame:   { color: '#0a0a0a', metalness: 0.98, roughness: 0.45 },
-  charcoal:    { color: '#111418', metalness: 0.95, roughness: 0.40 },
-  gunmetal:    { color: '#1c2128', metalness: 0.90, roughness: 0.38 },
-  steel:       { color: '#2e3440', metalness: 0.88, roughness: 0.35 },
+  darkFrame:   { color: '#1a1a1a', metalness: 0.5, roughness: 0.6 },
+  charcoal:    { color: '#2a2d32', metalness: 0.5, roughness: 0.5 },
+  gunmetal:    { color: '#32373e', metalness: 0.5, roughness: 0.5 },
+  steel:       { color: '#444a57', metalness: 0.4, roughness: 0.4 },
   // Bright metals
-  silver:      { color: '#b0b8c4', metalness: 1.00, roughness: 0.10 },
-  chrome:      { color: '#d8dfe8', metalness: 1.00, roughness: 0.04 },
-  titanium:    { color: '#7a8899', metalness: 0.95, roughness: 0.20 },
+  silver:      { color: '#b0b8c4', metalness: 0.6, roughness: 0.3 },
+  chrome:      { color: '#d8dfe8', metalness: 0.7, roughness: 0.2 },
+  titanium:    { color: '#7a8899', metalness: 0.5, roughness: 0.4 },
   // Neon emissives
   neonCyan:    { color: '#00e8ff', emissive: '#00e8ff', emissiveIntensity: 12, metalness: 0, roughness: 1 },
   neonCyanMid: { color: '#00c8e8', emissive: '#00c8e8', emissiveIntensity:  6, metalness: 0, roughness: 1 },
   neonCyanSoft:{ color: '#00a0c0', emissive: '#00a0c0', emissiveIntensity:  3, metalness: 0, roughness: 1 },
   neonBlue:    { color: '#0050ff', emissive: '#0050ff', emissiveIntensity:  5, metalness: 0, roughness: 1 },
   // Cables
-  rubber:      { color: '#050508', metalness: 0.05, roughness: 0.95 },
-  rubberDark:  { color: '#08080d', metalness: 0.05, roughness: 0.98 },
+  rubber:      { color: '#151518', metalness: 0.1, roughness: 0.90 },
+  rubberDark:  { color: '#101015', metalness: 0.1, roughness: 0.95 },
 };
 
 // ─── HELPERS ────────────────────────────────────────────────────────────────
@@ -181,47 +181,128 @@ const Segment = ({ length: L, width: W, isTip = false }) => {
   );
 };
 
+// ─── DYNAMIC HYDRAULIC PISTON ──────────────────────────────────────────────────
+const PistonHinge = ({ width, phaseOffset, curlMax, factor = 1.0 }) => {
+  const rodRef = useRef();
+  const housingRef = useRef();
+  
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime * 1.1 + phaseOffset;
+    let curl = Math.sin(t);
+    curl = Math.max(0, curl);
+    curl = Math.pow(curl, 2.0);
+    const a = curl * curlMax * factor;
+    
+    if (rodRef.current) {
+      rodRef.current.position.y = a * width * 0.45;
+      rodRef.current.rotation.x = a * 0.5; 
+    }
+    if (housingRef.current) {
+      housingRef.current.rotation.x = a * 0.5;
+    }
+  });
+
+  return (
+    <group position={[0, 0, -width * 0.65]}>
+      <group ref={housingRef}>
+        <mesh position={[0, -width * 0.3, 0]}>
+          <cylinderGeometry args={[width * 0.15, width * 0.15, width * 0.7, 12]} />
+          <M {...MAT.gunmetal} />
+        </mesh>
+        <mesh position={[0, -width * 0.65, 0]}>
+          <boxGeometry args={[width * 0.4, width * 0.2, width * 0.3]} />
+          <M {...MAT.steel} />
+        </mesh>
+      </group>
+      <group ref={rodRef}>
+        <mesh position={[0, width * 0.2, 0]}>
+          <cylinderGeometry args={[width * 0.08, width * 0.08, width * 0.8, 12]} />
+          <M {...MAT.chrome} />
+        </mesh>
+        {/* Rod connector ring */}
+        <mesh position={[0, width * 0.6, 0]} rotation={[0, Math.PI/2, 0]}>
+          <torusGeometry args={[width*0.12, width*0.04, 8, 16]} />
+          <M {...MAT.titanium} />
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+// ─── DYNAMIC KNUCKLE CABLE ───────────────────────────────────────────────────
+const KnuckleCable = ({ width, phaseOffset, curlMax, factor = 1.0, side = 1 }) => {
+  const meshRef = useRef();
+  
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime * 1.1 + phaseOffset;
+    let curl = Math.sin(t);
+    curl = Math.max(0, curl);
+    curl = Math.pow(curl, 2.0);
+    const a = curl * curlMax * factor;
+    
+    if (meshRef.current) {
+      const p0 = new THREE.Vector3(side * width * 0.4, -width * 0.7, -width * 0.5);
+      const p1 = new THREE.Vector3(side * width * 0.5, 0, -width * (0.6 + a * 0.6));
+      
+      const endY = Math.cos(a) * width * 0.7;
+      const endZ = -Math.sin(a) * width * 0.7 - width * 0.5;
+      const p2 = new THREE.Vector3(side * width * 0.4, endY, endZ);
+      
+      const curve = new THREE.QuadraticBezierCurve3(p0, p1, p2);
+      meshRef.current.geometry.dispose();
+      meshRef.current.geometry = new THREE.TubeGeometry(curve, 12, width * 0.04, 8, false);
+    }
+  });
+
+  return (
+    <mesh ref={meshRef}>
+      <tubeGeometry args={[new THREE.QuadraticBezierCurve3(new THREE.Vector3(0,0,0), new THREE.Vector3(0,1,0), new THREE.Vector3(0,2,0)), 12, width*0.04, 8, false]} />
+      <M {...MAT.rubberDark} />
+    </mesh>
+  );
+};
+
 // ─── KNUCKLE JOINT ────────────────────────────────────────────────────────────
 const Knuckle = ({ width: W }) => (
   <group>
-    {/* Main hinge drum */}
+    {/* Main hinge drum - slimmed down */}
     <mesh rotation={[0, 0, Math.PI / 2]}>
-      <cylinderGeometry args={[W * 1.05, W * 1.05, W * 2.30, 28]} />
+      <cylinderGeometry args={[W * 0.85, W * 0.85, W * 1.80, 28]} />
       <M {...MAT.darkFrame} />
     </mesh>
 
-    {/* Ridges on drum surface (knurling bands) */}
+    {/* Ridges on drum surface */}
     {[-0.3, 0, 0.3].map((offset, i) => (
-      <mesh key={i} rotation={[0, 0, Math.PI / 2]} position={[offset * W * 0.9, 0, 0]}>
-        <torusGeometry args={[W * 1.07, W * 0.06, 12, 28]} />
+      <mesh key={i} rotation={[0, 0, Math.PI / 2]} position={[offset * W * 0.7, 0, 0]}>
+        <torusGeometry args={[W * 0.87, W * 0.05, 12, 28]} />
         <M {...MAT.steel} />
       </mesh>
     ))}
 
-    {/* Chrome hinge pin shafts */}
+    {/* Heavy titanium clevis brackets holding the drum */}
     {[-1, 1].map((s) => (
       <group key={s}>
+        {/* Bracket outer plate */}
+        <mesh position={[s * W * 1.05, -W * 0.1, 0]}>
+          <boxGeometry args={[W * 0.2, W * 1.2, W * 1.2]} />
+          <M {...MAT.titanium} />
+        </mesh>
+        {/* Chrome hinge pin shafts */}
         <mesh position={[s * W * 1.20, 0, 0]}>
-          <cylinderGeometry args={[W * 0.36, W * 0.36, W * 0.20, 16]} />
+          <cylinderGeometry args={[W * 0.30, W * 0.30, W * 0.25, 16]} />
           <M {...MAT.chrome} />
         </mesh>
         {/* Hex bolt face */}
-        <mesh position={[s * W * 1.32, 0, 0]}>
-          <cylinderGeometry args={[W * 0.22, W * 0.22, W * 0.06, 6]} />
-          <M {...MAT.titanium} />
+        <mesh position={[s * W * 1.35, 0, 0]}>
+          <cylinderGeometry args={[W * 0.18, W * 0.18, W * 0.06, 6]} />
+          <M {...MAT.darkFrame} />
         </mesh>
       </group>
     ))}
 
-    {/* Outer chrome accent ring */}
-    <mesh rotation={[0, 0, Math.PI / 2]}>
-      <torusGeometry args={[W * 1.10, W * 0.09, 14, 28]} />
-      <M {...MAT.chrome} />
-    </mesh>
-
     {/* Inner neon ring pulse */}
     <mesh rotation={[0, 0, Math.PI / 2]}>
-      <torusGeometry args={[W * 0.70, W * 0.04, 12, 28]} />
+      <torusGeometry args={[W * 0.60, W * 0.04, 12, 28]} />
       <M {...MAT.neonCyanSoft} />
     </mesh>
   </group>
@@ -256,12 +337,18 @@ const Finger = ({
   return (
     <group position={basePosition} rotation={baseRotation}>
       <Knuckle width={widths[0]} />
+      <PistonHinge width={widths[0]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.65} />
+      <KnuckleCable width={widths[0]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.65} side={1} />
+      <KnuckleCable width={widths[0]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.65} side={-1} />
 
       <group ref={j1}>
         <Segment length={lengths[0]} width={widths[0]} />
 
         <group position={[0, lengths[0], 0]}>
           <Knuckle width={widths[1]} />
+          <PistonHinge width={widths[1]} phaseOffset={phaseOffset} curlMax={curlMax} factor={1.0} />
+          <KnuckleCable width={widths[1]} phaseOffset={phaseOffset} curlMax={curlMax} factor={1.0} side={1} />
+          <KnuckleCable width={widths[1]} phaseOffset={phaseOffset} curlMax={curlMax} factor={1.0} side={-1} />
 
           <group ref={j2}>
             <Segment length={lengths[1]} width={widths[1]} isTip={!hasDistal} />
@@ -269,6 +356,9 @@ const Finger = ({
             {hasDistal && (
               <group position={[0, lengths[1], 0]}>
                 <Knuckle width={widths[2]} />
+                <PistonHinge width={widths[2]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.80} />
+                <KnuckleCable width={widths[2]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.80} side={1} />
+                <KnuckleCable width={widths[2]} phaseOffset={phaseOffset} curlMax={curlMax} factor={0.80} side={-1} />
 
                 <group ref={j3}>
                   <Segment length={lengths[2]} width={widths[2]} isTip />

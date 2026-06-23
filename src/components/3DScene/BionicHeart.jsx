@@ -2,10 +2,10 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
-// Material presets for an aggressive, shiny mechanical/silver aesthetic
-const silverMatProps = { color: "#e8e8e8", metalness: 1, roughness: 0.15 };
-const darkSteelProps = { color: "#444444", metalness: 0.9, roughness: 0.5 };
-const brushedAlloyProps = { color: "#aaaaaa", metalness: 0.8, roughness: 0.3 };
+// Material presets adjusted for visibility without an HDR environment map
+const silverMatProps = { color: "#e8e8e8", metalness: 0.5, roughness: 0.4 };
+const darkSteelProps = { color: "#555555", metalness: 0.4, roughness: 0.6 };
+const brushedAlloyProps = { color: "#aaaaaa", metalness: 0.4, roughness: 0.5 };
 
 // A flexible ribbed pipe using TubeGeometry for the Aorta
 function RibbedPipe({ curve, radius = 0.4, tubularSegments = 64 }) {

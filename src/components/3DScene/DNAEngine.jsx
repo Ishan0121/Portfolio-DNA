@@ -2,6 +2,18 @@ import React, { useRef, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
+// --- DNA APPEARANCE SETTINGS ---
+export const DNA_SETTINGS = {
+  primaryColor: "#666666",   // Main backbone and structure color
+  secondaryColor: "#444444", // Secondary backbone color
+  accentColor: "#555555",    // Joints and connectors
+  pistonColor: "#333333",    // Inner mechanics
+  glowColorAT: "#00f0ff",    // A-T base pair glow (Cyan)
+  glowColorGC: "#ff0055",    // G-C base pair glow (Pink/Red)
+  metalness: 0.4,            // Lowered metalness so colors appear without environment map
+  roughness: 0.6             // Increased roughness for a more matte finish
+};
+
 // Procedural Cybernetic DNA - Double Helix
 export function DNAEngine() {
   const groupRef = useRef();
@@ -25,9 +37,12 @@ export function DNAEngine() {
       points1.push(new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius));
       points2.push(new THREE.Vector3(Math.cos(angle + Math.PI) * radius, y, Math.sin(angle + Math.PI) * radius));
       
-      // Only add base pairs for the actual visible range
       if (i >= 0 && i < numPairs) {
+        // Deterministic pseudo-randomness for a consistent "gene sequence"
+        const pseudoRandom = Math.abs(Math.sin(i * 12.9898 + 78.233) * 43758.5453) % 1;
+        const isGC = pseudoRandom > 0.5;
         pairs.push({
+          isGC,
           y,
           angle,
           leftPos: [Math.cos(angle) * radius, y, Math.sin(angle) * radius],
@@ -78,18 +93,18 @@ export function DNAEngine() {
         {/* Continuous Backbone 1 */}
         <mesh>
           <tubeGeometry args={[curve1, 150, 0.15, 12, false]} />
-          <meshStandardMaterial color="#222" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color={DNA_SETTINGS.primaryColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
         </mesh>
 
         {/* Continuous Backbone 2 */}
         <mesh>
           <tubeGeometry args={[curve2, 150, 0.15, 12, false]} />
-          <meshStandardMaterial color="#222" metalness={0.9} roughness={0.1} />
+          <meshStandardMaterial color={DNA_SETTINGS.secondaryColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
         </mesh>
 
         {/* Base Pairs (Rungs) */}
         {basePairs.map((pair, idx) => {
-          const isGC = idx % 2 === 0; // Alternate between A-T (2 bonds) and G-C (3 bonds)
+          const isGC = pair.isGC; // Use the generated sequence for realistic randomization
           
           return (
             <group key={idx}>
@@ -97,12 +112,12 @@ export function DNAEngine() {
               <group position={pair.leftPos}>
                 <mesh>
                   <sphereGeometry args={[0.25, 16, 16]} />
-                  <meshStandardMaterial color="#444" metalness={0.9} roughness={0.1} />
+                  <meshStandardMaterial color={DNA_SETTINGS.accentColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Mechanical clamp/ring around the joint */}
                 <mesh rotation={[Math.PI / 2, 0, pair.angle]}>
                   <torusGeometry args={[0.26, 0.04, 8, 16]} />
-                  <meshStandardMaterial color="#111" metalness={1} roughness={0.2} />
+                  <meshStandardMaterial color="#5b5b5b" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
               </group>
               
@@ -110,12 +125,12 @@ export function DNAEngine() {
               <group position={pair.rightPos}>
                 <mesh>
                   <sphereGeometry args={[0.25, 16, 16]} />
-                  <meshStandardMaterial color="#444" metalness={0.9} roughness={0.1} />
+                  <meshStandardMaterial color={DNA_SETTINGS.accentColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Mechanical clamp/ring around the joint */}
                 <mesh rotation={[Math.PI / 2, 0, pair.angle]}>
                   <torusGeometry args={[0.26, 0.04, 8, 16]} />
-                  <meshStandardMaterial color="#111" metalness={1} roughness={0.2} />
+                  <meshStandardMaterial color="#333333" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
               </group>
 
@@ -123,13 +138,13 @@ export function DNAEngine() {
               <group position={[Math.cos(pair.angle) * (radius / 2 + 0.1), pair.y, Math.sin(pair.angle) * (radius / 2 + 0.1)]} rotation={[0, -pair.angle, Math.PI / 2]}>
                 <mesh>
                   <cylinderGeometry args={[0.08, 0.08, radius - 0.2, 8]} />
-                  <meshStandardMaterial color="#222" metalness={0.9} roughness={0.2} />
+                  <meshStandardMaterial color={DNA_SETTINGS.pistonColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Piston Rings / Heat Sinks */}
                 {[-0.3, 0, 0.3].map((offset, i) => (
                   <mesh key={i} position={[0, (radius - 0.2) * offset, 0]}>
                     <cylinderGeometry args={[0.11, 0.11, 0.04, 8]} />
-                    <meshStandardMaterial color="#555" metalness={1} roughness={0.1} />
+                    <meshStandardMaterial color="#444444" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                   </mesh>
                 ))}
               </group>
@@ -138,16 +153,16 @@ export function DNAEngine() {
               <group position={[Math.cos(pair.angle) * 0.4, pair.y, Math.sin(pair.angle) * 0.4]} rotation={[0, -pair.angle, Math.PI / 2]}>
                 <mesh>
                   <cylinderGeometry args={[0.14, 0.14, 0.15, 8]} />
-                  <meshStandardMaterial color="#555" metalness={1} roughness={0.1} />
+                  <meshStandardMaterial color="#555" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 <mesh position={[0, -0.075, 0]}>
                   <cylinderGeometry args={[0.06, 0.06, 0.1, 8]} />
-                  <meshStandardMaterial color="#666" metalness={1} roughness={0.1} />
+                  <meshStandardMaterial color="#666" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Micro Status LED */}
                 <mesh position={[0.13, 0, 0]}>
                   <sphereGeometry args={[0.02, 8, 8]} />
-                  <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={2} toneMapped={false} />
+                  <meshStandardMaterial color={DNA_SETTINGS.glowColorAT} emissive={DNA_SETTINGS.glowColorAT} emissiveIntensity={2} toneMapped={false} />
                 </mesh>
               </group>
 
@@ -155,13 +170,13 @@ export function DNAEngine() {
               <group position={[Math.cos(pair.angle + Math.PI) * (radius / 2 + 0.1), pair.y, Math.sin(pair.angle + Math.PI) * (radius / 2 + 0.1)]} rotation={[0, -pair.angle, Math.PI / 2]}>
                 <mesh>
                   <cylinderGeometry args={[0.08, 0.08, radius - 0.2, 8]} />
-                  <meshStandardMaterial color="#222" metalness={0.9} roughness={0.2} />
+                  <meshStandardMaterial color={DNA_SETTINGS.pistonColor} metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Piston Rings / Heat Sinks */}
                 {[-0.3, 0, 0.3].map((offset, i) => (
                   <mesh key={i} position={[0, (radius - 0.2) * offset, 0]}>
                     <cylinderGeometry args={[0.11, 0.11, 0.04, 8]} />
-                    <meshStandardMaterial color="#555" metalness={1} roughness={0.1} />
+                    <meshStandardMaterial color="#444444" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                   </mesh>
                 ))}
               </group>
@@ -170,16 +185,16 @@ export function DNAEngine() {
               <group position={[Math.cos(pair.angle + Math.PI) * 0.4, pair.y, Math.sin(pair.angle + Math.PI) * 0.4]} rotation={[0, -pair.angle, Math.PI / 2]}>
                 <mesh>
                   <cylinderGeometry args={[0.14, 0.14, 0.15, 8]} />
-                  <meshStandardMaterial color="#555" metalness={1} roughness={0.1} />
+                  <meshStandardMaterial color="#555" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 <mesh position={[0, 0.08, 0]}>
                   <cylinderGeometry args={[0.07, 0.07, 0.02, 8]} />
-                  <meshStandardMaterial color="#000" metalness={0} roughness={1} />
+                  <meshStandardMaterial color="#111" metalness={DNA_SETTINGS.metalness} roughness={DNA_SETTINGS.roughness} />
                 </mesh>
                 {/* Micro Status LED */}
                 <mesh position={[0.13, 0, 0]}>
                   <sphereGeometry args={[0.02, 8, 8]} />
-                  <meshStandardMaterial color={isGC ? "#ff0055" : "#00f0ff"} emissive={isGC ? "#ff0055" : "#00f0ff"} emissiveIntensity={2} toneMapped={false} />
+                  <meshStandardMaterial color={isGC ? DNA_SETTINGS.glowColorGC : DNA_SETTINGS.glowColorAT} emissive={isGC ? DNA_SETTINGS.glowColorGC : DNA_SETTINGS.glowColorAT} emissiveIntensity={2} toneMapped={false} />
                 </mesh>
               </group>
 
@@ -190,15 +205,15 @@ export function DNAEngine() {
                     {/* 3 Bonds for G-C */}
                     <mesh position={[-0.06, 0, 0]}>
                       <cylinderGeometry args={[0.015, 0.015, 0.65, 8]} />
-                      <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={3} toneMapped={false} />
+                      <meshStandardMaterial color={DNA_SETTINGS.glowColorGC} emissive={DNA_SETTINGS.glowColorGC} emissiveIntensity={3} toneMapped={false} />
                     </mesh>
                     <mesh position={[0, 0, 0]}>
                       <cylinderGeometry args={[0.015, 0.015, 0.65, 8]} />
-                      <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={3} toneMapped={false} />
+                      <meshStandardMaterial color={DNA_SETTINGS.glowColorGC} emissive={DNA_SETTINGS.glowColorGC} emissiveIntensity={3} toneMapped={false} />
                     </mesh>
                     <mesh position={[0.06, 0, 0]}>
                       <cylinderGeometry args={[0.015, 0.015, 0.65, 8]} />
-                      <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={3} toneMapped={false} />
+                      <meshStandardMaterial color={DNA_SETTINGS.glowColorGC} emissive={DNA_SETTINGS.glowColorGC} emissiveIntensity={3} toneMapped={false} />
                     </mesh>
                   </>
                 ) : (
@@ -206,11 +221,11 @@ export function DNAEngine() {
                     {/* 2 Bonds for A-T */}
                     <mesh position={[-0.04, 0, 0]}>
                       <cylinderGeometry args={[0.015, 0.015, 0.65, 8]} />
-                      <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={3} toneMapped={false} />
+                      <meshStandardMaterial color={DNA_SETTINGS.glowColorAT} emissive={DNA_SETTINGS.glowColorAT} emissiveIntensity={3} toneMapped={false} />
                     </mesh>
                     <mesh position={[0.04, 0, 0]}>
                       <cylinderGeometry args={[0.015, 0.015, 0.65, 8]} />
-                      <meshStandardMaterial color="#00f0ff" emissive="#00f0ff" emissiveIntensity={3} toneMapped={false} />
+                      <meshStandardMaterial color={DNA_SETTINGS.glowColorAT} emissive={DNA_SETTINGS.glowColorAT} emissiveIntensity={3} toneMapped={false} />
                     </mesh>
                   </>
                 )}
