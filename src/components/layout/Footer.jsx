@@ -4,22 +4,10 @@ import { motion } from "framer-motion";
 import { IconHeart, IconMail, IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import { siteConfig } from "../../data/site";
 import { SystemMonitor } from "../HUD/SystemMonitor";
-
-const getProtocolName = (path) => {
-  switch (path) {
-    case '/': return 'BASE PAIR PROTOCOL';
-    case '/about': return 'NEURAL NETWORK ARCHITECTURE';
-    case '/skills': return 'DATA CORE SYSTEMS';
-    case '/projects': return 'CYBER EYE OPTICS';
-    case '/contact': return 'BIONIC HEART UPLINK';
-    default: return 'SYSTEM PROTOCOL';
-  }
-};
+import { ProtocolDetails } from "../HUD/ProtocolDetails";
 
 export function Footer() {
   const year = new Date().getFullYear();
-  const location = useLocation();
-  const protocol = getProtocolName(location.pathname);
 
   return (
     <footer className="relative mt-24 overflow-hidden w-full z-10">
@@ -97,14 +85,11 @@ export function Footer() {
         </div>
 
         {/* HUD Elements */}
-        <div className="max-w-6xl mx-auto mt-10 p-4 border border-white/10 bg-black/20 rounded flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Protocol Name */}
-          <div className="flex items-center">
-            <span className="font-mono text-xs text-primary tracking-widest border border-primary/30 bg-primary/5 px-3 py-1 rounded whitespace-nowrap">
-              {protocol}
-            </span>
+        <div className="max-w-6xl mx-auto mt-10 flex flex-col lg:flex-row items-stretch justify-between gap-6">
+          <ProtocolDetails />
+          <div className="glass-window p-4 xl:p-6 font-mono text-sm w-full lg:max-w-sm flex items-center justify-center">
+            <SystemMonitor />
           </div>
-          <SystemMonitor />
         </div>
 
         {/* Bottom bar */}

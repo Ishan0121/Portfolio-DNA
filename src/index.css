@@ -11,8 +11,8 @@
     --color-secondary: 240 240 240;
     --color-muted: 136 136 136;
     
-    --color-glass-start: rgba(255, 255, 255, 0.05);
-    --color-glass-end: rgba(255, 255, 255, 0.01);
+    --color-glass-start: rgba(255, 255, 255, 0.12);
+    --color-glass-end: rgba(255, 255, 255, 0.05);
     
     /* Skill Badge Colors */
     --skill-advanced-text: rgb(52, 211, 153);
@@ -39,8 +39,8 @@
       --color-secondary: 255 255 255;
       --color-muted: 150 150 150;
       
-      --color-glass-start: rgba(255, 255, 255, 0.1);
-      --color-glass-end: rgba(255, 255, 255, 0.03);
+      --color-glass-start: rgba(255, 255, 255, 0.2);
+      --color-glass-end: rgba(255, 255, 255, 0.1);
     }
   }
 
@@ -51,8 +51,8 @@
 
 @layer components {
   .u-glass {
-    background: linear-gradient(to bottom right, var(--color-glass-start), var(--color-glass-end));
-    @apply backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+    @apply bg-black/40 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+    background-image: linear-gradient(to bottom right, var(--color-glass-start), var(--color-glass-end));
   }
 
   .glass-panel {
@@ -60,7 +60,7 @@
   }
   
   .glass-window {
-    @apply bg-surface/40 backdrop-blur-2xl border border-border/10 rounded-lg shadow-xl overflow-hidden;
+    @apply bg-surface/70 backdrop-blur-2xl border border-border/10 rounded-lg shadow-xl overflow-hidden;
   }
 
   .neon-text {
