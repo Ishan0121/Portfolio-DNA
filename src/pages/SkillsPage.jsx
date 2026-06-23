@@ -32,17 +32,19 @@ export function SkillsPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {category.skills.map((skill, sIdx) => (
-                <div key={skill.name} className="glass-panel p-6 flex flex-col gap-3 group hover:border-primary/40 hover:bg-white/5 transition-all duration-300">
-                  <div className="flex justify-between items-start">
+                <button key={skill.name} className="glass-panel p-6 flex flex-col gap-3 group hover:border-primary/40 hover:bg-white/5 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary text-left h-full">
+                  <div className="flex justify-between items-start w-full">
                     <h3 className="text-lg font-bold text-white group-hover:text-primary transition-colors">{skill.name}</h3>
                     <span className={`text-xs font-mono px-2 py-1 border rounded ${levelColors[skill.level] || 'bg-white/10 text-white border-white/20'}`}>
                       {skill.level}
                     </span>
                   </div>
-                  <p className="text-muted text-sm leading-relaxed">
-                    {skill.description}
-                  </p>
-                </div>
+                  <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-out">
+                    <p className="text-muted text-sm leading-relaxed overflow-hidden">
+                      {skill.description}
+                    </p>
+                  </div>
+                </button>
               ))}
             </div>
           </motion.div>

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Lenis from 'lenis';
+import { InteractProvider } from './context/InteractContext';
 
 import { MainLayout } from './components/layout/MainLayout';
 import { HomePage } from './pages/HomePage';
@@ -31,17 +33,22 @@ function App() {
   }, []);
 
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="skills" element={<SkillsPage />} />
-          <Route path="projects" element={<ProjectsPage />} />
-          <Route path="contact" element={<ContactPage />} />
-        </Route>
-      </Routes>
-    </HashRouter>
+    <HelmetProvider>
+      <InteractProvider>
+        <HashRouter>
+          <a href="#main-content" className="skip-link">Skip to main content</a>
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<HomePage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="skills" element={<SkillsPage />} />
+              <Route path="projects" element={<ProjectsPage />} />
+              <Route path="contact" element={<ContactPage />} />
+            </Route>
+          </Routes>
+        </HashRouter>
+      </InteractProvider>
+    </HelmetProvider>
   );
 }
 

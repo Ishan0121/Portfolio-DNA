@@ -3,42 +3,76 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-background: 10 10 10;
+    --color-surface: 18 18 18;
+    --color-border: 255 255 255;
+    --color-primary: 0 240 255;
+    --color-secondary: 240 240 240;
+    --color-muted: 136 136 136;
+    
+    --color-glass-start: rgba(255, 255, 255, 0.05);
+    --color-glass-end: rgba(255, 255, 255, 0.01);
+    
+    /* Skill Badge Colors */
+    --skill-advanced-text: rgb(52, 211, 153);
+    --skill-advanced-bg: rgba(16, 185, 129, 0.15);
+    --skill-advanced-border: rgba(16, 185, 129, 0.3);
+    
+    --skill-intermediate-text: rgb(56, 189, 248);
+    --skill-intermediate-bg: rgba(14, 165, 233, 0.15);
+    --skill-intermediate-border: rgba(14, 165, 233, 0.3);
+    
+    --skill-beginner-text: rgb(251, 191, 36);
+    --skill-beginner-bg: rgba(245, 158, 11, 0.15);
+    --skill-beginner-border: rgba(245, 158, 11, 0.3);
+  }
+
+  /* Cybernetic theme usually looks best dark, but setting up prefers-color-scheme framework */
+  @media (prefers-color-scheme: light) {
+    :root {
+      /* Only slightly brighten the dark theme to preserve cyber aesthetic */
+      --color-background: 20 20 20;
+      --color-surface: 30 30 30;
+      --color-border: 200 200 200;
+      --color-primary: 0 200 220;
+      --color-secondary: 255 255 255;
+      --color-muted: 150 150 150;
+      
+      --color-glass-start: rgba(255, 255, 255, 0.1);
+      --color-glass-end: rgba(255, 255, 255, 0.03);
+    }
+  }
+
   body {
     @apply bg-background text-secondary antialiased font-sans overflow-x-hidden;
   }
 }
 
 @layer components {
+  .u-glass {
+    background: linear-gradient(to bottom right, var(--color-glass-start), var(--color-glass-end));
+    @apply backdrop-blur-md shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+  }
+
   .glass-panel {
-    @apply bg-glass-gradient backdrop-blur-md border border-border rounded-xl shadow-[0_4px_30px_rgba(0,0,0,0.1)];
+    @apply u-glass border border-border/10 rounded-xl;
   }
   
   .glass-window {
-    @apply bg-surface/40 backdrop-blur-lg border border-white/10 rounded-lg shadow-xl overflow-hidden;
+    @apply bg-surface/40 backdrop-blur-lg border border-border/10 rounded-lg shadow-xl overflow-hidden;
   }
 
   .neon-text {
-    @apply text-primary drop-shadow-[0_0_8px_rgba(0,240,255,0.8)];
+    @apply text-primary;
+    text-shadow: 0 0 8px rgb(var(--color-primary) / 0.8);
   }
-}
 
-/* Lenis recommended css */
-html.lenis, html.lenis body {
-  height: auto;
-}
+  .u-shadow-neon {
+    box-shadow: 0 0 10px rgb(var(--color-primary) / 0.5);
+  }
 
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[100] bg-primary text-black px-4 py-2 font-bold rounded;
+  }
 }

@@ -7,19 +7,19 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0a0a0a',
-        surface: '#121212',
-        border: 'rgba(255, 255, 255, 0.1)',
-        primary: '#00f0ff',
-        secondary: '#f0f0f0',
-        muted: '#888888',
+        background: 'rgb(var(--color-background) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface) / <alpha-value>)',
+        border: 'rgb(var(--color-border) / <alpha-value>)',
+        primary: 'rgb(var(--color-primary) / <alpha-value>)',
+        secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
+        muted: 'rgb(var(--color-muted) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['Fira Code', 'monospace'],
       },
       backgroundImage: {
-        'glass-gradient': 'linear-gradient(to bottom right, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
+        'glass-gradient': 'linear-gradient(to bottom right, var(--color-glass-start), var(--color-glass-end))',
       }
     },
   },

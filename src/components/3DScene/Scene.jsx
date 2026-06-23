@@ -1,21 +1,61 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { OrbitControls, Environment, Html } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { DNAEngine } from './DNAEngine';
+import { NeuralNetwork } from './NeuralNetwork';
+import { DataCore } from './DataCore';
+import { CyberEye } from './CyberEye';
+import { BionicHeart } from './BionicHeart';
+import { useInteract } from '../../context/InteractContext';
 
-export function SceneWrapper() {
+function CanvasLoader() {
   return (
-    <Canvas camera={{ position: [0, 0, 15], fov: 45 }}>
+    <Html center>
+      <div className="flex flex-col items-center justify-center gap-4 whitespace-nowrap">
+        <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin shadow-[0_0_15px_rgba(var(--color-primary),0.5)]"></div>
+        <div className="text-primary font-mono text-sm tracking-widest animate-pulse">INITIATING_CORE</div>
+      </div>
+    </Html>
+  );
+}
+
+export function SceneWrapper({ route }) {
+  const { isInteractMode, resetTrigger } = useInteract();
+  const controlsRef = useRef();
+
+  // Reset camera when the reset button is clicked
+  useEffect(() => {
+    if (controlsRef.current) {
+      controlsRef.current.reset();
+    }
+  }, [resetTrigger]);
+
+  // Dynamically set the Orbit target to the exact center of the currently rendered model
+  let target = [0, 0, 0];
+  if (!route || route === '/') target = [0, 0, -8]; // DNAEngine
+  else if (route === '/about') target = [0, 0, -8]; // NeuralNetwork
+  else if (route === '/skills') target = [0, 1, -6]; // DataCore
+  else if (route === '/projects') target = [0, 0, -6]; // CyberEye
+  else if (route === '/contact') target = [0, 0, -6]; // BionicHeart
+
+  return (
+    <Canvas camera={{ position: [0, 0, 15], fov: 45 }} dpr={[1, 2]} gl={{ antialias: false }}>
       <color attach="background" args={['#050505']} />
       
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[10, 10, 5]} intensity={1} />
-      <pointLight position={[-10, -10, -10]} color="#00f0ff" intensity={2} />
+      {/* Custom lighting to replace the fetched HDR environment map */}
+      <ambientLight intensity={0.8} />
+      <directionalLight position={[10, 20, 10]} intensity={2} color="#ffffff" />
+      <directionalLight position={[-10, 10, -10]} intensity={1.5} color="#00f0ff" />
+      <directionalLight position={[0, -10, 5]} intensity={1} color="#222222" />
+      <pointLight position={[-5, 0, 5]} color="#00f0ff" intensity={2} />
       
-      <Suspense fallback={null}>
-        <DNAEngine />
-        <Environment preset="city" />
+      <Suspense fallback={<CanvasLoader />}>
+        {(!route || route === '/') && <DNAEngine />}
+        {route === '/about' && <NeuralNetwork />}
+        {route === '/skills' && <DataCore />}
+        {route === '/projects' && <CyberEye />}
+        {route === '/contact' && <BionicHeart />}
       </Suspense>
 
       <EffectComposer>
@@ -28,11 +68,13 @@ export function SceneWrapper() {
       </EffectComposer>
 
       <OrbitControls 
-        enableZoom={false} 
-        enablePan={false}
-        enableRotate={false}
-        maxPolarAngle={Math.PI / 2 + 0.2}
-        minPolarAngle={Math.PI / 2 - 0.2}
+        ref={controlsRef}
+        target={target}
+        enableZoom={isInteractMode} 
+        enablePan={isInteractMode}
+        enableRotate={isInteractMode}
+        maxPolarAngle={Math.PI}
+        minPolarAngle={0}
       />
     </Canvas>
   );

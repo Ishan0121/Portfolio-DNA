@@ -41,7 +41,7 @@ export function HeroProfile() {
       className="glass-window p-8 md:p-12 max-w-2xl border-l-4 border-l-primary relative overflow-hidden"
     >
       {/* Background static grid for texture */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(0,240,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(0,240,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none"></div>
       
       <div className="relative z-10 space-y-6">
         <div className="space-y-2">
@@ -66,17 +66,17 @@ export function HeroProfile() {
         <div className="flex flex-col sm:flex-row gap-4 pt-6">
           <Link 
             to="/projects"
-            className="group relative inline-flex items-center justify-center gap-2 px-8 py-3 bg-primary/10 text-primary border border-primary/50 rounded font-mono hover:bg-primary/20 transition-all duration-300"
+            className="group relative inline-flex items-center justify-center gap-2 px-8 py-3 bg-primary/10 text-primary border border-primary/50 rounded font-mono hover:bg-primary/20 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             <span>View My Work</span>
             <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-            <div className="absolute inset-0 shadow-[0_0_15px_rgba(0,240,255,0.2)] group-hover:shadow-[0_0_25px_rgba(0,240,255,0.4)] transition-shadow pointer-events-none rounded"></div>
+            <div className="absolute inset-0 shadow-[0_0_15px_rgba(var(--color-primary),0.2)] group-hover:shadow-[0_0_25px_rgba(var(--color-primary),0.4)] transition-shadow pointer-events-none rounded"></div>
           </Link>
           
           <a 
             href={siteConfig.resumeUrl}
             download
-            className="group inline-flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-white border border-white/10 rounded font-mono hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+            className="group inline-flex items-center justify-center gap-2 px-8 py-3 bg-white/5 text-white border border-white/10 rounded font-mono hover:bg-white/10 hover:border-white/30 transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
           >
             <span>Download CV</span>
             <Download className="w-4 h-4 group-hover:translate-y-1 transition-transform" />
